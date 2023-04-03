@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XmScholarshipMapper">
+    
+    <resultMap type="XmScholarship" id="XmScholarshipResult">
+        <result property="scholarshipId"    column="scholarship_id"    />
+        <result property="createtorId"    column="createtor_id"    />
+        <result property="scholarshipName"    column="scholarship_name"    />
+        <result property="amount"    column="amount"    />
+        <result property="conditionContent"    column="condition_content"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="modifier"    column="modifier"    />
+        <result property="modifyTime"    column="modify_time"    />
+        <collection property="depts" ofType="XmScholarshipDept" resultMap="deptResult"/>
+        <collection  property="types"   ofType="XmScholarshipType"  resultMap="typeResult" />
+    </resultMap>
+
+    <resultMap id="deptResult" type="SysDept">
+        <id     property="deptId"    column="dept_id"     />
+        <result property="deptName"  column="dept_name"   />
+    </resultMap>
+
+    <resultMap id="typeResult" type="XmScholarshipType">
+        <id     property="scholarshipTypeId"       column="scholarship_type_id"        />
+        <result property="scholarshipTypeName"     column="scholarship_type_name"      />
+    </resultMap>
+
+    <sql id="selectXmScholarshipVo">
+        SELECT xs.scholarship_id,
+               xs.createtor_id,
+               xs.scholarship_name,
+               xs.amount,
+               xs.condition_content,
+               xs.create_time,
+               xs.modifier,
+               xs.modify_time,
+               sd.dept_id,
+               sd.dept_name,
+               xst.scholarship_type_id,
+               xst.scholarship_type_name
+        FROM xm_scholarship xs
+                 JOIN xm_scholarship_dept xsd ON xs.scholarship_id = xsd.scholarship_id
+                 JOIN sys_dept sd ON xsd.dept_id = sd.dept_id
+                 JOIN xm_scholarship_scholarshiptype xss ON xs.scholarship_id = xss.scholarship_id
+                 JOIN xm_scholarship_type xst ON xss.scholarship_type_id = xst.scholarship_type_id
+    </sql>
+
+    <select id="selectXmScholarshipList" parameterType="XmScholarship" resultMap="XmScholarshipResult">
+        select * from xm_scholarship
+        where 1 = 1
+        <if test="scholarshipName != null "> and scholarship_name like concat('%', #{scholarshipName}, '%')</if>
+        <if test="amount != null "> and amount = #{amount}</if>
+        <if test="createTime != null "> and create_time = #{createTime}</if>
+        <if test="modifyTime != null "> and modify_time = #{modifyTime}</if>
+    </select>
+    
+    <select id="selectXmScholarshipByScholarshipId" parameterType="Long" resultMap="XmScholarshipResult">
+        <include refid="selectXmScholarshipVo"/>
+        where xs.scholarship_id = #{scholarshipId}
+    </select>
+
+    <select id="selectXmScholarshipListByDeptId" resultMap="XmScholarshipResult">
+        select *
+        from xm_scholarship
+        where scholarship_id in
+              (SELECT xsd.scholarship_id
+               from xm_scholarship_dept xsd
+               WHERE (xsd.dept_id = #{deptId} or xsd.dept_id in (SELECT distinct t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors))))
+    </select>
+
+    <insert id="insertXmScholarship" parameterType="XmScholarship" useGeneratedKeys="true" keyProperty="scholarshipId">
+        insert into xm_scholarship
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createtorId != null">createtor_id,</if>
+            <if test="scholarshipName != null">scholarship_name,</if>
+            <if test="amount != null">amount,</if>
+            <if test="conditionContent != null">condition_content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="modifier != null">modifier,</if>
+            <if test="modifyTime != null">modify_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createtorId != null">#{createtorId},</if>
+            <if test="scholarshipName != null">#{scholarshipName},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="conditionContent != null">#{conditionContent},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="modifier != null">#{modifier},</if>
+            <if test="modifyTime != null">#{modifyTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXmScholarship" parameterType="XmScholarship">
+        update xm_scholarship
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createtorId != null">createtor_id = #{createtorId},</if>
+            <if test="scholarshipName != null">scholarship_name = #{scholarshipName},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="conditionContent != null">condition_content = #{conditionContent},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="modifier != null">modifier = #{modifier},</if>
+            <if test="modifyTime != null">modify_time = #{modifyTime},</if>
+        </trim>
+        where scholarship_id = #{scholarshipId}
+    </update>
+
+    <delete id="deleteXmScholarshipByScholarshipId" parameterType="Long">
+        delete from xm_scholarship where scholarship_id = #{scholarshipId}
+    </delete>
+
+    <delete id="deleteXmScholarshipByScholarshipIds" parameterType="String">
+        delete from xm_scholarship where scholarship_id in 
+        <foreach item="scholarshipId" collection="array" open="(" separator="," close=")">
+            #{scholarshipId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XmScholarshipScholarshiptypeMapper">
+    
+    <resultMap type="XmScholarshipScholarshiptype" id="XmScholarshipScholarshiptypeResult">
+        <result property="scholarshipTypeId"    column="scholarship_type_id"    />
+        <result property="scholarshipId"    column="scholarship_id"    />
+    </resultMap>
+
+    <sql id="selectXmScholarshipScholarshiptypeVo">
+        select scholarship_type_id, scholarship_id from xm_scholarship_scholarshiptype
+    </sql>
+
+    <select id="selectXmScholarshipScholarshiptypeList" parameterType="XmScholarshipScholarshiptype" resultMap="XmScholarshipScholarshiptypeResult">
+        <include refid="selectXmScholarshipScholarshiptypeVo"/>
+        <where>  
+            <if test="scholarshipId != null "> and scholarship_id = #{scholarshipId}</if>
+        </where>
+    </select>
+    
+    <select id="selectXmScholarshipScholarshiptypeByScholarshipTypeId" parameterType="Long" resultMap="XmScholarshipScholarshiptypeResult">
+        <include refid="selectXmScholarshipScholarshiptypeVo"/>
+        where scholarship_type_id = #{scholarshipTypeId}
+    </select>
+        
+    <insert id="insertXmScholarshipScholarshiptype" parameterType="XmScholarshipScholarshiptype">
+        insert into xm_scholarship_scholarshiptype
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="scholarshipTypeId != null">scholarship_type_id,</if>
+            <if test="scholarshipId != null">scholarship_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="scholarshipTypeId != null">#{scholarshipTypeId},</if>
+            <if test="scholarshipId != null">#{scholarshipId},</if>
+         </trim>
+    </insert>
+
+	<insert id="batchinsert">
+        insert into xm_scholarship_scholarshiptype(scholarship_id, scholarship_type_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.scholarshipId},#{item.scholarshipTypeId})
+        </foreach>
+    </insert>
+
+	<update id="updateXmScholarshipScholarshiptype" parameterType="XmScholarshipScholarshiptype">
+        update xm_scholarship_scholarshiptype
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scholarshipId != null">scholarship_id = #{scholarshipId},</if>
+        </trim>
+        where scholarship_type_id = #{scholarshipTypeId}
+    </update>
+
+    <delete id="deleteXmScholarshipScholarshiptypeByScholarshipTypeId" parameterType="Long">
+        delete from xm_scholarship_scholarshiptype where scholarship_type_id = #{scholarshipTypeId}
+    </delete>
+
+    <delete id="deleteXmScholarshipScholarshiptypeByScholarshipTypeIds" parameterType="String">
+        delete from xm_scholarship_scholarshiptype where scholarship_type_id in 
+        <foreach item="scholarshipTypeId" collection="array" open="(" separator="," close=")">
+            #{scholarshipTypeId}
+        </foreach>
+    </delete>
+    <delete id="deleteXmScholarshipScholarshiptypeByScholarshipId" parameterType="Long">
+        delete from xm_scholarship_scholarshiptype where scholarship_id = #{scholarshipId}
+    </delete>
+</mapper>

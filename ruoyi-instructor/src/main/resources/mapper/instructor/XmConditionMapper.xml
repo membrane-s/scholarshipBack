@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XmConditionMapper">
+    
+    <resultMap type="XmCondition" id="XmConditionResult">
+        <result property="conditionId"    column="condition_id"    />
+        <result property="condition"    column="condition"    />
+        <result property="isNecessity"    column="is_necessity"    />
+    </resultMap>
+
+    <sql id="selectXmConditionVo">
+        select condition_id, `condition`, is_necessity from `xm_condition`
+    </sql>
+
+    <select id="selectXmConditionList" parameterType="XmCondition" resultMap="XmConditionResult">
+        <include refid="selectXmConditionVo"/>
+        <where>  
+            <if test="condition != null  and condition != ''"> and `condition` like concat('%', #{condition}, '%')</if>
+            <if test="isNecessity != null "> and is_necessity = #{isNecessity}</if>
+        </where>
+    </select>
+    
+    <select id="selectXmConditionByConditionId" parameterType="Long" resultMap="XmConditionResult">
+        <include refid="selectXmConditionVo"/>
+        where condition_id = #{conditionId}
+    </select>
+	<select id="selectXmConditionListByScholarshipId" resultType="java.lang.String">
+        select condition_content from xm_scholarship where scholarship_id = #{scholarshipId}
+    </select>
+
+    <select id="selectXmConditionListByUserId" resultType="java.lang.String">
+        SELECT condition_content from sys_user where user_id = #{userId}
+        union
+        SELECT uncondition_content from sys_user where user_id = #{userId}
+    </select>
+
+    <insert id="insertXmCondition" parameterType="XmCondition" useGeneratedKeys="true" keyProperty="conditionId">
+        insert into `xm_condition`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="condition != null and condition !=''">`condition`,</if>
+            <if test="isNecessity != null and isNecessity != ''">is_necessity,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="condition != null and condition !=''">#{condition},</if>
+            <if test="isNecessity != null and isNecessity != ''">#{isNecessity},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXmCondition" parameterType="XmCondition">
+        update xm_condition
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="condition != null">`condition` = #{condition},</if>
+            <if test="isNecessity != null">is_necessity = #{isNecessity},</if>
+        </trim>
+        where condition_id = #{conditionId}
+    </update>
+
+    <delete id="deleteXmConditionByConditionId" parameterType="Long">
+        delete from xm_condition where condition_id = #{conditionId}
+    </delete>
+
+    <delete id="deleteXmConditionByConditionIds" parameterType="String">
+        delete from xm_condition where condition_id in 
+        <foreach item="conditionId" collection="array" open="(" separator="," close=")">
+            #{conditionId}
+        </foreach>
+    </delete>
+</mapper>

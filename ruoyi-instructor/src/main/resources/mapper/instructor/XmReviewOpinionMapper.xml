@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XmReviewOpinionMapper">
+    
+    <resultMap type="XmReviewOpinion" id="XmReviewOpinionResult">
+        <result property="reviewId"    column="review_id"    />
+        <result property="reviewerId"    column="reviewer_id"    />
+        <result property="reviewDate"    column="review_date"    />
+        <result property="opinion"    column="opinion"    />
+        <result property="reviewResult"    column="review_result"    />
+        <result property="applicationId"    column="application_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="scholarshipName"    column="scholarship_name"    />
+    </resultMap>
+
+    <sql id="selectXmReviewOpinionVo">
+        select r.review_id,
+               r.reviewer_id,
+               r.review_date,
+               r.opinion,
+               r.review_result,
+               r.application_id,
+               u.user_name,
+               s.scholarship_name
+        from xm_review_opinion r
+                 join xm_scholarship_application a ON r.application_id = a.application_id
+                 join sys_user u ON a.user_id = u.user_id
+                 join xm_scholarship s ON a.scholarship_id = s.scholarship_id
+    </sql>
+
+
+
+    <select id="selectXmReviewOpinionList" parameterType="XmReviewOpinion" resultMap="XmReviewOpinionResult">
+        <include refid="selectXmReviewOpinionVo"/>
+        <where>  
+            <if test="reviewerId != null "> and reviewer_id = #{reviewerId}</if>
+            <if test="reviewDate != null "> and review_date = #{reviewDate}</if>
+            <if test="opinion != null  and opinion != ''"> and opinion = #{opinion}</if>
+            <if test="reviewResult != null  and reviewResult != ''"> and review_result = #{reviewResult}</if>
+            <if test="applicationId != null "> and application_id = #{applicationId}</if>
+        </where>
+    </select>
+    
+    <select id="selectXmReviewOpinionByReviewId" parameterType="Long" resultMap="XmReviewOpinionResult">
+        <include refid="selectXmReviewOpinionVo"/>
+        where review_id = #{reviewId}
+    </select>
+        
+    <insert id="insertXmReviewOpinion" parameterType="XmReviewOpinion" useGeneratedKeys="true" keyProperty="reviewId">
+        insert into xm_review_opinion
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reviewerId != null">reviewer_id,</if>
+            <if test="reviewDate != null">review_date,</if>
+            <if test="opinion != null and opinion != ''">opinion,</if>
+            <if test="reviewResult != null and reviewResult != ''">review_result,</if>
+            <if test="applicationId != null">application_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reviewerId != null">#{reviewerId},</if>
+            <if test="reviewDate != null">#{reviewDate},</if>
+            <if test="opinion != null and opinion != ''">#{opinion},</if>
+            <if test="reviewResult != null and reviewResult != ''">#{reviewResult},</if>
+            <if test="applicationId != null">#{applicationId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateXmReviewOpinion" parameterType="XmReviewOpinion">
+        update xm_review_opinion
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reviewerId != null">reviewer_id = #{reviewerId},</if>
+            <if test="reviewDate != null">review_date = #{reviewDate},</if>
+            <if test="opinion != null and opinion != ''">opinion = #{opinion},</if>
+            <if test="reviewResult != null and reviewResult != ''">review_result = #{reviewResult},</if>
+            <if test="applicationId != null">application_id = #{applicationId},</if>
+        </trim>
+        where review_id = #{reviewId}
+    </update>
+
+    <delete id="deleteXmReviewOpinionByReviewId" parameterType="Long">
+        delete from xm_review_opinion where review_id = #{reviewId}
+    </delete>
+
+    <delete id="deleteXmReviewOpinionByReviewIds" parameterType="String">
+        delete from xm_review_opinion where review_id in 
+        <foreach item="reviewId" collection="array" open="(" separator="," close=")">
+            #{reviewId}
+        </foreach>
+    </delete>
+</mapper>

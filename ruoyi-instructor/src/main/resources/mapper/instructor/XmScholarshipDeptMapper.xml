@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.XmScholarshipDeptMapper">
+
+	<resultMap type="XmScholarshipDept" id="XmScholarshipDeptResult">
+		<result property="scholarshipId"    column="scholarship_id"    />
+		<result property="deptId"    column="dept_id"    />
+	</resultMap>
+
+	<sql id="selectXmScholarshipDeptVo">
+		select scholarship_id, dept_id from xm_scholarship_dept
+	</sql>
+
+	<select id="selectXmScholarshipDeptList" parameterType="XmScholarshipDept" resultMap="XmScholarshipDeptResult">
+		<include refid="selectXmScholarshipDeptVo"/>
+		<where>
+		</where>
+	</select>
+
+	<select id="selectXmScholarshipDeptByScholarshipId" parameterType="Long" resultMap="XmScholarshipDeptResult">
+		<include refid="selectXmScholarshipDeptVo"/>
+		where scholarship_id = #{scholarshipId}
+	</select>
+	<select id="selectXmScholarshipDeptAll" resultMap="XmScholarshipDeptResult">
+		<include refid="selectXmScholarshipDeptVo"/>
+	</select>
+	<select id="selectDeptByScholarshipId" resultType="com.ruoyi.common.core.domain.entity.SysDept">
+		SELECT sys_dept.dept_id as deptId, sys_dept.dept_name as deptName
+		from sys_dept
+				 JOIN xm_scholarship_dept on xm_scholarship_dept.dept_id = sys_dept.dept_id
+		where xm_scholarship_dept.scholarship_id = #{scholarshipId};
+	</select>
+
+	<insert id="insertXmScholarshipDept" parameterType="XmScholarshipDept">
+		insert into xm_scholarship_dept
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="scholarshipId != null">scholarship_id,</if>
+			<if test="deptId != null">dept_id,</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="scholarshipId != null">#{scholarshipId},</if>
+			<if test="deptId != null">#{deptId},</if>
+		</trim>
+	</insert>
+	<insert id="batchScholarshipDept">
+		insert into xm_scholarship_dept(scholarship_id, dept_id) values
+		<foreach item="item" index="index" collection="list" separator=",">
+			(#{item.scholarshipId},#{item.deptId})
+		</foreach>
+	</insert>
+
+	<update id="updateXmScholarshipDept" parameterType="XmScholarshipDept">
+		update xm_scholarship_dept
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="deptId != null">dept_id = #{deptId},</if>
+		</trim>
+		where scholarship_id = #{scholarshipId}
+	</update>
+
+	<delete id="deleteXmScholarshipDeptByScholarshipId" parameterType="Long">
+		delete from xm_scholarship_dept where scholarship_id = #{scholarshipId}
+	</delete>
+
+	<delete id="deleteXmScholarshipDeptByScholarshipIds" parameterType="String">
+		delete from xm_scholarship_dept where scholarship_id in
+		<foreach item="scholarshipId" collection="array" open="(" separator="," close=")">
+			#{scholarshipId}
+		</foreach>
+	</delete>
+</mapper>
