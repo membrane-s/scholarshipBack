@@ -64,20 +64,12 @@
             <artifactId>ruoyi-instructor</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-school</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-college</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-students</artifactId>
-        </dependency>
 
     </dependencies>
 

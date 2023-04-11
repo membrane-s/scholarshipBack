@@ -9,8 +9,7 @@
     <version>3.8.5</version>
 
     <name>ruoyi</name>
-    <url>http://www.ruoyi.vip</url>
-    <description>若依管理系统</description>
+    <description>奖学金系统</description>
     
     <properties>
         <ruoyi.version>3.8.5</ruoyi.version>
@@ -36,6 +35,11 @@
     <!-- 依赖声明 -->
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-devtools</artifactId>
+                <version>2.5.14</version>
+            </dependency>
 
             <!-- SpringBoot的依赖配置-->
             <dependency>
@@ -171,12 +175,7 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
-            <!--学生管理模块-->
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-students</artifactId>
-                <version>3.8.5</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>com.ruoyi</groupId>
@@ -184,11 +183,7 @@
                 <version>3.8.5</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-school</artifactId>
-                <version>3.8.5</version>
-            </dependency>
+
 
             <dependency>
                 <groupId>com.ruoyi</groupId>
@@ -213,11 +208,8 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>ruoyi-students</module>
         <module>ruoyi-instructor</module>
         <module>ruoyi-college</module>
-        <module>ruoyi-school</module>
-        <module>ruoyi-students</module>
     </modules>
     <packaging>pom</packaging>
 
