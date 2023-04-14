@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,16 +67,25 @@ public class XmScholarshipApplicationServiceImpl implements IXmScholarshipApplic
         xmScholarshipApplication.setUserId(SecurityUtils.getUserId());
         xmScholarshipApplication.setApplicationDate(new Date());
         xmScholarshipApplication.setStatus(Constants.APPLICATION_STATUS_FIRST);
+        //alldata数据存储的是奖学金关联的申请条件
         List<XmCondition> alldata = xmConditionService.selectXmConditionListByScholarshipId(xmScholarshipApplication.getScholarshipId());
-        List<XmCondition> approve = xmConditionService.selectXmConditionListByUserId(SecurityUtils.getUserId());
-        //预申请档案里包含了必须填写的申请基础条件，以及按照模型提取出来能综合体现学生能力的申请条件
-        //奖金申请前要求满足申请的基本条件基本条件不满足则不允许申请，那么不允许申请，并返回对应提示信息。
+        //数据存储的是学生已经填写的，要求必填的申请条件和
+        List<XmCondition> approveNeed = xmConditionService.selectNeedXmConditionListByUserId(SecurityUtils.getUserId());
+        //非必填的申请条件
+        List<XmCondition> approveUnNeed = xmConditionService.selectUnNeedXmConditionListByUserId(SecurityUtils.getUserId());
+        //
+        ArrayList<Object> approve = new ArrayList<>();
+        approve.add(approveNeed);
+        approve.add(approveUnNeed);
 
+        //过滤出学生申请此奖金未填的申请条件
         List<XmCondition> collect = alldata.stream().filter(o -> !approve.contains(o)).collect(Collectors.toList());
 
+        //当奖学金填写的申请条件数量小于基本数量，提示错误
         if(approve.size() < Constants.CONDITION_NECCESSITY_NUMBER){
             return AjaxResult.warn("请完整填写预申请档案以审核您的申请资格！");
         }
+
         //alldata为奖学金所需所有条件，需要检查是否有学生未填信息
         else if(collect.size() != 0)
         {
@@ -85,8 +95,7 @@ public class XmScholarshipApplicationServiceImpl implements IXmScholarshipApplic
 
         //学生填写信息之后，奖金要求与学生信息进行对比判断条件是否符合，如果不符合则直接返回
         //申请基本条件审核,即进行对比
-        //问题是如何进行条件的审核？
-
+        //问题是如何进行条件的审核？申请条件是什么样的，怎么判断学生的填写的这个信息是否满足呢
 
 
         //奖学金必填条件审核，进行奖金条件的对比

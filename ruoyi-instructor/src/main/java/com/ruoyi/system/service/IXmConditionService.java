@@ -60,4 +60,6 @@ public interface IXmConditionService
     public int deleteXmConditionByConditionId(Long conditionId);
     List<XmCondition> selectXmConditionListByScholarshipId(Long scholarshipId);
     List<XmCondition> selectXmConditionListByUserId(Long userId);
+    List<XmCondition> selectNeedXmConditionListByUserId(Long userId);
+    List<XmCondition> selectUnNeedXmConditionListByUserId(Long userId);
 }

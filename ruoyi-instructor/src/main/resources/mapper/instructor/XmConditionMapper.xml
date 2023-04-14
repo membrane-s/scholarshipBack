@@ -30,6 +30,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select condition_content from xm_scholarship where scholarship_id = #{scholarshipId}
     </select>
 
+    <select id="selectNeesXmConditionListByUserId" resultType="java.lang.String">
+        SELECT condition_content from sys_user where user_id = #{userId}
+    </select>
+    <select id="selectUnNeedXmConditionListByUserId" resultType="java.lang.String">
+        SELECT uncondition_content from sys_user where user_id = #{userId}
+    </select>
+
     <select id="selectXmConditionListByUserId" resultType="java.lang.String">
         SELECT condition_content from sys_user where user_id = #{userId}
         union

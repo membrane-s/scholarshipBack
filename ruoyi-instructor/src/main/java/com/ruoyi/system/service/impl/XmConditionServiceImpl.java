@@ -105,4 +105,17 @@ public class XmConditionServiceImpl implements IXmConditionService
         String str = xmConditionMapper.selectXmConditionListByUserId(userId);
         return JSON.parseArray(str, XmCondition.class);
     }
+
+    @Override
+    public List<XmCondition> selectNeedXmConditionListByUserId(Long userId)
+    {
+        String str = xmConditionMapper.selectNeesXmConditionListByUserId(userId);
+        return JSON.parseArray(str, XmCondition.class);
+    }
+    @Override
+    public List<XmCondition> selectUnNeedXmConditionListByUserId(Long userId)
+    {
+        String str = xmConditionMapper.selectUnNeedXmConditionListByUserId(userId);
+        return JSON.parseArray(str, XmCondition.class);
+    }
 }

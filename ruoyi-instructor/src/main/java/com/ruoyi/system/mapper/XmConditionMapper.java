@@ -61,5 +61,7 @@ public interface XmConditionMapper
      */
     public int deleteXmConditionByConditionIds(Long[] conditionIds);
     String selectXmConditionListByScholarshipId(Long scholarshipId);
+    String selectNeesXmConditionListByUserId(Long userId);
+    String selectUnNeedXmConditionListByUserId(Long userId);
     String selectXmConditionListByUserId(Long userId);
 }

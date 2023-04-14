@@ -60,7 +60,6 @@ public class XmConditionController extends BaseController
     @GetMapping(value = "/slistCondition/{scholarshipId}")
     public AjaxResult slistCondition(@PathVariable("scholarshipId") Long scholarshipId)
     {
-
         //奖学金要求的申请条件  --> all data
         List<XmCondition> list = xmConditionService.selectXmConditionListByScholarshipId(scholarshipId);
         JSONObject jsonObject = new JSONObject();
@@ -68,17 +67,16 @@ public class XmConditionController extends BaseController
 
         //学生实际的申请条件，肯定也是在奖学金要求的子集内，因此需要将学生的申请条件都查询出来
         // 置灰条件 = all data - alldata与list1的交际
- /*     List<XmCondition> list1 = xmConditionService.selectXmConditionListByUserId(SecurityUtils.getUserId());
-        if(Objects.isNull(list1) || list1.size() == 0)   return AjaxResult.warn("您还未填写预申请档案，请先填写！");
+        List<XmCondition> list1 = xmConditionService.selectXmConditionListByUserId(SecurityUtils.getUserId());
+        if(Objects.isNull(list1) || list1.size() == 0)
+        {
+            return AjaxResult.warn("您还未填写预申请档案，请先填写！");
+        }
 
         List<XmCondition> result = list.stream()
                 .filter(item -> list1.stream().noneMatch(item1 -> item1.getConditionId().equals(item.getConditionId())))
                 .collect(Collectors.toList());
-        jsonObject.put("no_approve",result);*/
-        XmCondition xmCondition = list.get(0);
-        ArrayList<XmCondition> xmConditions = new ArrayList<>();
-        xmConditions.add(xmCondition);
-        jsonObject.put("no_approve",xmConditions);
+        jsonObject.put("no_approve",result);
 
         return success(jsonObject);
     }
