@@ -43,6 +43,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT uncondition_content from sys_user where user_id = #{userId}
     </select>
 
+    <select id="selectXmConditionAllList" resultMap="XmConditionResult">
+        select * from `xm_condition` where is_necessity = 1
+
+    </select>
+
+    <select id="selectUnXmConditionAllList" resultMap="XmConditionResult">
+        select * from `xm_condition` where is_necessity = 0
+    </select>
+
+
     <insert id="insertXmCondition" parameterType="XmCondition" useGeneratedKeys="true" keyProperty="conditionId">
         insert into `xm_condition`
         <trim prefix="(" suffix=")" suffixOverrides=",">

@@ -64,4 +64,6 @@ public interface XmConditionMapper
     String selectNeesXmConditionListByUserId(Long userId);
     String selectUnNeedXmConditionListByUserId(Long userId);
     String selectXmConditionListByUserId(Long userId);
+    List<XmCondition> selectXmConditionAllList();
+    List<XmCondition> selectUnXmConditionAllList();
 }

@@ -53,6 +53,14 @@ public class XmConditionController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('instructor:condition:listAll')")
+    @GetMapping("/listAll")
+    public AjaxResult listAll()
+    {
+        return AjaxResult.success(xmConditionService.selectXmConditionAllList());
+
+    }
+
     /**
      * 根据奖金ID查询对应申请条件列表
      */

@@ -1,6 +1,8 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.system.domain.XmCondition;
 
 /**
@@ -62,4 +64,5 @@ public interface IXmConditionService
     List<XmCondition> selectXmConditionListByUserId(Long userId);
     List<XmCondition> selectNeedXmConditionListByUserId(Long userId);
     List<XmCondition> selectUnNeedXmConditionListByUserId(Long userId);
+    JSONObject selectXmConditionAllList();
 }
