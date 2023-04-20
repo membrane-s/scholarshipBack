@@ -26,6 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectXmConditionVo"/>
         where condition_id = #{conditionId}
     </select>
+
 	<select id="selectXmConditionListByScholarshipId" resultType="java.lang.String">
         select condition_content from xm_scholarship where scholarship_id = #{scholarshipId}
     </select>
@@ -45,7 +46,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectXmConditionAllList" resultMap="XmConditionResult">
         select * from `xm_condition` where is_necessity = 1
-
     </select>
 
     <select id="selectUnXmConditionAllList" resultMap="XmConditionResult">

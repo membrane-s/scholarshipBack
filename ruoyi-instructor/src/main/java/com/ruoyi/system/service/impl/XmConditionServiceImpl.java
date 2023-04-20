@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.XmConditionMapper;
@@ -125,9 +126,14 @@ public class XmConditionServiceImpl implements IXmConditionService
 
         List<XmCondition> xmConditions1 = xmConditionMapper.selectUnXmConditionAllList();
 
+        //条件库
+        xmConditions.addAll(xmConditions1);
+
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("conditionContent", xmConditions);
-        jsonObject.put("unConditionContent", xmConditions1);
+
+        //已填条件
+        jsonObject.put("conditionContent", xmConditionMapper.selectXmConditionListByUserId(SecurityUtils.getUserId()));
+        jsonObject.put("conditionContents", xmConditions);
         return jsonObject;
     }
 }
